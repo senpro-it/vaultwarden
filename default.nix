@@ -33,7 +33,7 @@ in
                 Password for the Vaultwarden super admin. Should be at least 32 characters long. Remember that this password is stored unencrypted in the nix-store.
               '';
             };
-            hibp-api-key = {
+            hibp-api-key = mkOption {
               type = types.str;
               example = "D8IjCH45ePz5IdS47tSe4y";
               description = ''
