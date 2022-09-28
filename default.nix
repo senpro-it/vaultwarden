@@ -33,6 +33,13 @@ in
                 Password for the Vaultwarden super admin. Should be at least 32 characters long. Remember that this password is stored unencrypted in the nix-store.
               '';
             };
+            hibp-api-key = {
+              type = types.str;
+              example = "D8IjCH45ePz5IdS47tSe4y";
+              description = ''
+                API key for haveibeenpwned.com to fetch leaked username/password combinations.
+              '';
+            };
             smtp = {
               host = mkOption {
                 type = types.str;
@@ -112,6 +119,7 @@ in
         environment = {
           INIT_ASSETS = "0";
           ADMIN_TOKEN = "${cfg.vaultwarden.admin-token}";
+          HIBP_API_KEY = "${cfg.vaultwarden.hibp-api-key}";
           DOMAIN = "https://${cfg.traefik.fqdn}";
           SIGNUPS_ALLOWED = "false";
           SMTP_HOST = "${cfg.vaultwarden.smtp.host}";
