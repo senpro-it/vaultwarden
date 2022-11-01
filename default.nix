@@ -114,7 +114,7 @@ in
           "--net=proxy"
         ];
         volumes = [
-          "/srv/podman/vaultwarden/volume.d/vaultwarden:/data"
+          "vaultwarden:/data"
         ];
         environment = {
           INIT_ASSETS = "0";
@@ -135,9 +135,6 @@ in
       };
     };
     system.activationScripts = {
-      makeVaultwardenBindVolDirectories = ''
-        mkdir -p /srv/podman/vaultwarden/volume.d/vaultwarden
-      '';
       makeVaultwardenTraefikConfiguration = ''
         printf '%s\n' \
         "http:"   \
