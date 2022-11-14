@@ -134,41 +134,41 @@ in
         autoStart = true;
       };
     };
-    system.activationScripts = {
-      makeVaultwardenTraefikConfiguration = ''
-        printf '%s\n' \
-        "http:"   \
-        "  routers:"   \
-        "    vaultwarden:" \
-        "      rule: \"Host(\`${cfg.traefik.fqdn}\`)\"" \
-        "      service: \"vaultwarden\"" \
-        "      entryPoints:" \
-        "      - \"https2-tcp\"" \
-        "      tls: true" \
-        "    vaultwarden-websocket:" \
-        "      rule: \"Host(\`${cfg.traefik.fqdn}\`) && Path(\`/notifications/hub\`)\"" \
-        "      service: \"vaultwarden-websocket\"" \
-        "      entryPoints:" \
-        "      - \"https2-tcp\"" \
-        "      middlewares: \"vaultwarden-websocket\"" \
-        "      tls: true" \
-        "  services:" \
-        "    vaultwarden:" \
-        "      loadBalancer:" \
-        "        passHostHeader: true" \
-        "        servers:" \
-        "        - url: \"http://vaultwarden:80\"" \
-        "    vaultwarden-websocket:" \
-        "      loadBalancer:" \
-        "        passHostHeader: true" \
-        "        servers:" \
-        "        - url: \"http://vaultwarden:3012\"" \
-        "  middlewares:" \
-        "    vaultwarden-websocket:" \
-        "      stripprefix:" \
-        "        prefixes: \"/notifications/hub\"" \
-        > /srv/podman/traefik/volume.d/traefik/conf.d/vaultwarden.yml
-      '';
+    systemd.services = {
+      "podman-vaultwarden" = {
+        postStart = ''
+          ${pkgs.coreutils-full}/bin/printf '%s\n' "http:" \
+          "  routers:" \
+          "    vaultwarden:" \
+          "      rule: \"Host(\`${cfg.traefik.fqdn}\`)\"" \
+          "      service: \"vaultwarden\"" \
+          "      entryPoints:" \
+          "      - \"https2-tcp\"" \
+          "      tls: true" \
+          "    vaultwarden-websocket:" \
+          "      rule: \"Host(\`${cfg.traefik.fqdn}\`) && Path(\`/notifications/hub\`)\"" \
+          "      service: \"vaultwarden-websocket\"" \
+          "      entryPoints:" \
+          "      - \"https2-tcp\"" \
+          "      middlewares: \"vaultwarden-websocket\"" \
+          "      tls: true" \
+          "  services:" \
+          "    vaultwarden:" \
+          "      loadBalancer:" \
+          "        passHostHeader: true" \
+          "        servers:" \
+          "        - url: \"http://vaultwarden:80\"" \
+          "    vaultwarden-websocket:" \
+          "      loadBalancer:" \
+          "        passHostHeader: true" \
+          "        servers:" \
+          "        - url: \"http://vaultwarden:3012\"" \
+          "  middlewares:" \
+          "    vaultwarden-websocket:" \
+          "      stripprefix:" \
+          "        prefixes: \"/notifications/hub\"" > $(${pkgs.podman}/bin/podman volume inspect traefik --format "{{.Mountpoint}}")/conf.d/apps-vaultwarden.yml
+        '';
+      };
     };
   };
 
