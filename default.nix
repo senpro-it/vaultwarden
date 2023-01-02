@@ -118,6 +118,8 @@ in
         ];
         environment = {
           INIT_ASSETS = "0";
+          ORG_EVENTS_ENABLED = "true";
+          ORG_GROUPS_ENABLED = "true";
           ADMIN_TOKEN = "${cfg.vaultwarden.admin-token}";
           HIBP_API_KEY = "${cfg.vaultwarden.hibp-api-key}";
           DOMAIN = "https://${cfg.traefik.fqdn}";
